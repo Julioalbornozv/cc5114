@@ -1,4 +1,4 @@
-package tarea_1;
+package excercise_1;
 
 public class AND extends Perceptron {
 	public AND(int x, int y) {

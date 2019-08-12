@@ -5,11 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import tarea_1.AND;
-import tarea_1.NAND;
-import tarea_1.OR;
-import tarea_1.Perceptron;
-public class Perceptron_Test {
+import excercise_1.AND;
+import excercise_1.NAND;
+import excercise_1.OR;
+import excercise_1.Perceptron;
+public class Perceptron1_Test {
 	private Perceptron p1,p2,p3;
 	private int out;
 	@Before

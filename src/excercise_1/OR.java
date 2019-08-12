@@ -1,4 +1,4 @@
-package tarea_1;
+package excercise_1;
 
 public class OR extends Perceptron {
 	public OR(int x, int y) {

@@ -1,4 +1,4 @@
-package tarea_1;
+package excercise_1;
 
 public abstract class Perceptron {
 	protected int bias;
