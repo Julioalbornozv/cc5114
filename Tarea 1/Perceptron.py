@@ -1,15 +1,19 @@
 import numpy as np
 import Functions as func
 import random
-import pdb
 
 class Perceptron(object):
-	def __init__(self, function, n_in):
+	def __init__(self, function, n_in, learn):
+		"""
+		Perceptron class
+		"""
 		self.seed = random.seed()
 		self.activation = function
 		self.bias = random.uniform(-2.0,2.0)
 		self.weights = np.zeros((n_in))
-		self.lr = 0.1
+		self.lr = learn
+		self.out = 0.0
+		self.delta = 0.0
 		
 		for i in range(n_in):
 			self.weights[i] = random.uniform(-50.0, 50.0)
@@ -21,7 +25,8 @@ class Perceptron(object):
 		for i in range(len(self.weights)):
 			result += self.weights[i] * input[i]
 		
-		return self.activation.apply(result + self.bias)
+		self.out = self.activation.apply(result + self.bias)
+		return self.out
 		
 	def train(self, input, expected):
 		output = self.feed(input)

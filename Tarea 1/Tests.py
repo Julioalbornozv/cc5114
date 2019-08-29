@@ -2,10 +2,10 @@ import numpy as np
 import random	
 import pdb
 import Functions as func
-import Classifier as cl
+import Perceptron as pc
 
 def Perceptron_Learning_Test(num, iter):
-	Neuron = cl.Perceptron(func.Step(), 2)
+	Neuron = pc.Perceptron(func.Step(), 2, 0.1)
 	data = np.zeros((num,2))
 	expected = np.zeros((num))
 	for d in range(num):
@@ -18,11 +18,8 @@ def Perceptron_Learning_Test(num, iter):
 		
 	start_params = [Neuron.weights, Neuron.bias]
 	
-	#print(data, end="\n")
-	#print(expected)
 	out = np.zeros((num))
 	for i in range(iter):
-		#print(out)
 		for j in range(num):
 			out[j] = Neuron.feed(data[j])
 			Neuron.train(data[j], expected[j])

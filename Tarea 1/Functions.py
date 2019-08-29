@@ -14,7 +14,7 @@ class Sigmoid:
 	def apply(self,x):
 		return 1 / (1 + np.exp(-x))
 	
-	def derivative(x):
+	def derivative(self, x):
 		return self.apply(x) * (1 - self.apply(x))
 
 class Tanh:
