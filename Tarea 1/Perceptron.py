@@ -1,6 +1,7 @@
 import numpy as np
 import Functions as func
 import random
+import pdb
 
 class Perceptron(object):
 	def __init__(self, function, n_in, learn):

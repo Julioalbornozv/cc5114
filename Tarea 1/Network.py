@@ -1,6 +1,7 @@
 import numpy as np
 import Perceptron as pc
 import Functions as fc
+import pdb
 
 class Layer(object):
 	def __init__(self, n_p , n_i , act, lr):
@@ -13,7 +14,14 @@ class Layer(object):
 		self.prev: Previous Layer Object
 		self.next: Next Layer Object
 		"""
-		self.neurons = [pc.Perceptron(act, n_i, lr)]*n_p
+		
+		self.neurons = []
+		for i in range(n_p):
+			self.neurons.append(pc.Perceptron(act, n_i, lr))
+		
+		for n in self.neurons:
+			print(n.weights)
+			
 		self.act = act
 		self.lr = lr
 		
@@ -32,21 +40,21 @@ class Layer(object):
 		else:
 			return out
 		
-	def initialDelta(expected):
+	def initialDelta(self, expected):
 		"""
 		Calculates the delta of the neurons in the output layer, propagates the error through the network 
 		
 		expected: Integer list, expected behaviour
 		"""
 		for n in range(len(self.neurons)):
-			error = expected[n] - neuron[n].out
+			error = expected[n] - self.neurons[n].out
 			self.neurons[n].delta = error * self.act.derivative(self.neurons[n].out)
 		
 		if self.prev != None:
 			self.prev.propagateError()
 			
 	
-	def propagateError():
+	def propagateError(self):
 		"""
 		Calculates the delta of the neurons in a hidden layer based on the deltas obtained
 		in the next layer
@@ -62,7 +70,7 @@ class Layer(object):
 		if self.prev != None:
 			self.prev.propagateError()
 			
-	def updateWeights(inputs):
+	def updateWeights(self, inputs):
 		"""
 		Updates weight and bias considering the new deltas obtaibed by the backpropagation process
 		
@@ -72,7 +80,7 @@ class Layer(object):
 		out = []
 		for neuron in self.neurons:
 			for w in range(len(inputs)):
-				neuron.weights[w] += (self.lr * neuron.delta * input[w])
+				neuron.weights[w] += (self.lr * neuron.delta * inputs[w])
 			neuron.bias += self.lr * neuron.delta
 			out.append(neuron.out)
 		
@@ -101,13 +109,15 @@ class Network(object):
 		
 		#Layer initialization
 		for i in range(1, len(n_h)):
-			self.layers.append(Network.Layer(n_h[i], n_h[i-1], act, lr))
+			self.layers.append(Layer(n_h[i], n_h[i-1], act, lr))
 		
 		#Layer Linking
 		self.layers[0].prev = None
+		self.layers[0].next = self.layers[1]
 		self.layers[-1].next = None
+		self.layers[-1].prev = self.layers[-2]
 		
-		for j in range (1, len(n_h)-1):
+		for j in range (1, n_l-1):
 			self.layers[j].prev = self.layers[j-1]
 			self.layers[j].next = self.layers[j+1]
 	
@@ -124,7 +134,7 @@ class Network(object):
 			neuron = self.layers[0].neurons[n]
 			neuron.weights = precomp[0]
 	
-	def feed(inputs):
+	def feed(self, inputs):
 		"""
 		Feeds the input vector to the network, returning the output from the last layer
 		
@@ -140,11 +150,11 @@ class Network(object):
 		inputs: Integer list, contains inputs to be processed
 		expected; Integer list, expected outcome of the feeding process
 		"""
-		out = self.layer[0].feed(inputs)
+		out = self.layers[0].feed(inputs)
 		self.backwardPropagateError(expected)
 		self.updateWeights(inputs)
 				
-	def backwardPropagateError(expected):
+	def backwardPropagateError(self, expected):
 		"""
 		Executes the backpropagtion process depending on the network accuracy
 		
@@ -152,7 +162,7 @@ class Network(object):
 		"""
 		self.layers[-1].initialDelta(expected)
 		
-	def updateWeights(inputs):
+	def updateWeights(self, inputs):
 		"""
 		Update the weights of each neuron based on the deltas obtained by backpropagation
 		
