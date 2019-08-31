@@ -18,10 +18,7 @@ class Layer(object):
 		self.neurons = []
 		for i in range(n_p):
 			self.neurons.append(pc.Perceptron(act, n_i, lr))
-		
-		for n in self.neurons:
-			print(n.weights)
-			
+				
 		self.act = act
 		self.lr = lr
 		
