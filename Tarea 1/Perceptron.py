@@ -26,7 +26,12 @@ class Perceptron(object):
 		for i in range(len(self.weights)):
 			result += self.weights[i] * input[i]
 		
-		self.out = self.activation.apply(result + self.bias)
+		res = self.activation.apply(result + self.bias)
+		if res < 0.5:
+			self.out = 0
+		else:
+			self.out = 1
+			
 		return self.out
 		
 	def train(self, input, expected):

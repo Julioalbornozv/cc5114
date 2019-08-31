@@ -24,12 +24,14 @@ class Layer(object):
 		
 		self.prev = None
 		self.next = None
+		self.cache = None
 		
 	def feed(self, inputs):
 		out = []
 		for n in self.neurons:
 			out.append(n.feed(inputs))
 		
+		self.cache = out
 		if self.next != None:
 			result = self.next.feed(out)
 			return result
