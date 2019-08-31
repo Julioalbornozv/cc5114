@@ -23,6 +23,7 @@ dataset = np.asarray(dataset)
 
 for i in range(len(dataset[0])-1):
 	dataset[:,i] = (dataset[:,i] - np.amin(dataset[:,i]))/(np.amax(dataset[:,i])-np.amin(dataset[:,i]))
+	np.random.shuffle(dataset)
 	
 ### One-hot encoding
 expected = []
@@ -61,7 +62,7 @@ while iter != 0:
 	iter -= 1
 	for s in range(len(input)):
 		Neural.train(input[s], expected[s])
-	print("\rTraining...\t\t\tE:{} I:{}".format(1000-iter),end="")
+	print("\rTraining...\t\t\tE:{}".format(1000-iter),end="")
 	
 ### Network Test data feed
 	
