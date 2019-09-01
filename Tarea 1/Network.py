@@ -91,7 +91,7 @@ class Network(object):
 		"""
 		Neural Network class
 		
-		n_l: Integer, Number of layers contained in the network
+		n_l: Integer, Number of layers contained in the network (Not including the input layer)
 		n_h: Integer List containing number of neurons per hidden layer
 		n_i: Integer, Number inputs recieved
 		n_o: Integer, Number of outputs returned by the network
@@ -126,8 +126,6 @@ class Network(object):
 		Recieves a weight matrix containing the weights from the input layer neurons
 		
 		precomp: Integer list of lists, contains weight of each neuron in the input
-		
-		TODO: Recieve a data cube containing the weights of all neurons in the network
 		"""
 		for n in range(len(self.layers[0])):
 			neuron = self.layers[0].neurons[n]
