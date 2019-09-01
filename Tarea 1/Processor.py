@@ -3,6 +3,7 @@ import Perceptron as pc
 import Functions as fc
 import numpy as np
 import matplotlib.pyplot as plt
+import pdb
 
 """
 TODO: (Post-release)
@@ -91,48 +92,46 @@ facc = 0
 for t in range(len(test)):
 	out = Neural.feed(test[t])
 	print("Exp:\t{}\tPred:\t{}\n".format(expected[t+167],out))
-	otp = Neural.layers[-1].cache
 	
 	#Succeds
-	if np.array_equal(otp, expected[s]):
+	if np.array_equal(out, expected[t+167]):
+		#pdb.set_trace()
 		facc += 1
-		if np.array_equal(otp, LA):
+		if np.array_equal(out, LA):
 			confusion[0][0] += 1
-		elif np.array_equal(otp, LB):
+		elif np.array_equal(out, LB):
 			confusion[1][1] += 1
 		else:
 			confusion[2][2] += 1
-	
 	#Fails an A
-	elif np.array_equal(expected[s], LA):
-		if np.array_equal(otp, LB):
+	elif np.array_equal(expected[t+167], LA):
+		if np.array_equal(out, LB):
 			confusion[1][0] += 1
-		elif np.array_equal(otp, LC):
+		elif np.array_equal(out, LC):
 			confusion[2][0] += 1
-	
+		else:
+			garbage += 1
 	#Fails a B
-	elif np.array_equal(expected[s], LB):
-		if np.array_equal(otp, LA):
-			confusion[1][0] += 1
-		elif np.array_equal(otp, LC):
-			confusion[1][2] += 1
-	
-	#Fails a C
-	elif np.array_equal(expected[s], LC):
-		if np.array_equal(otp, LB):
-			confusion[2][0] += 1
-		elif np.array_equal(otp, LB):
+	elif np.array_equal(expected[t+167], LB):
+		if np.array_equal(out, LA):
+			confusion[0][1] += 1
+		elif np.array_equal(out, LC):
 			confusion[2][1] += 1
-	
-	# NN fails to assign a label
-	else:
-		garbage += 1
-	
+		else:
+			garbage += 1
+	#Fails a C
+	elif np.array_equal(expected[t+167], LC):
+		if np.array_equal(otp, LB):
+			confusion[0][2] += 1
+		elif np.array_equal(out, LC):
+			confusion[1][2] += 1
+		else:
+			garbage += 1
 	
 	otp = Neural.layers[-1].cache
-	frms += np.sum((otp-expected[s])**2)/3.0
+	frms += np.sum((otp-expected[t+167])**2)/3.0
 		
-print("Test Results:\nAccuracy: {}\t RMS: {}\t Failed predictions: {}".format(int(facc*100/len(test)), frms/len(test), garbage))
+print("Test Results:\nAccuracy: {}%\t RMS: {}\t Failed predictions: {}".format(int(facc*100/len(test)), frms/len(test), garbage))
 
 ### Plots
 #Confusion matrix
