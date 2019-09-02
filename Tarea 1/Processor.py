@@ -138,8 +138,8 @@ def plot_results(Acc, MSE, confusion):
 		for j in range(3):
 			text = ax.text(j, i, int(confusion[i, j]), ha="center", va="center", color="w")
 	
-	seeds = ["Predicted type 1", "Predicted type 2", "Predicted Type 3"]
-	exp_seeds = ["Type 1 seeds", "Type 2 seeds", "Type 3 seeds"]
+	seeds = ["Predicted Kama seed", "Predicted Rosa seed", "Predicted Canadian seed"]
+	exp_seeds = ["Kama seeds", "Rosa seeds", "Canadian seeds"]
 	ax.set_title("Confusion Matrix")
 	
 	ax.set_xticks(np.arange(len(exp_seeds)))

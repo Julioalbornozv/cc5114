@@ -12,7 +12,7 @@ def Perceptron_Learning_Test(num, iter):
 	for d in range(num):
 		data[d][0] = random.uniform(-50.0,50.0)
 		data[d][1] = random.uniform(-120.0,120.0)
-		if 3*data[d][0]+5 < data[d][1]:	#Generalize this code
+		if 3*data[d][0]+5 < data[d][1]:
 			expected[d] = 1
 		else:
 			expected[d] = 0
@@ -62,10 +62,8 @@ def Network_System_Test(n_l, n_h, n_i, n_o, func, lr):
 		assert sample[num] != out[-1][num], "Error: Input did not change"
 		
 def Main_Test():
-	#print("Starting Tests...\nRunning Perceptron Test...")
-	#Perceptron_Learning_Test(10000,2)
-	#Perceptron_Learning_Test(10000,20)
-	#Perceptron_Learning_Test(10000,50)
+	print("Starting Tests...\nRunning Perceptron Test...")
+	Perceptron_Learning_Test(10000,50)
 	print("Test Passed\nRunning Network Tests...")
 	Network_System_Test(4, [3, 5, 2], 6, 4, func.Sigmoid(), 0.1)
 	print("Test Passed")

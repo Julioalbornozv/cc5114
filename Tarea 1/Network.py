@@ -58,7 +58,6 @@ class Layer(object):
 		Calculates the delta of the neurons in a hidden layer based on the deltas obtained
 		in the next layer
 		
-		TODO: Reduce trainwrecks (self.a.b.c.d.e....)
 		"""
 		for n in range(len(self.neurons)):
 			error = 0.0
