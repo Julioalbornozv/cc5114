@@ -13,8 +13,8 @@ Lorem Ipsum
 ## Example
 For this example we used a Neural Network with 7 inputs, a hidden layer with 12 neurons and an output layer of 3 neurons.
 
-![Training Accuracy](https://www.github.com/Julioalbornoz/cc5114/Tarea_1/Images/tr_acc.png)
+![""](https://raw.githubusercontent.com/Julioalbornozv/cc5114/master/Tarea%201/Images/tr_acc.png?raw=true)
 
-![Training Accuracy](https://www.github.com/Julioalbornoz/cc5114/Tarea_1/Images/tr_mse.png)
+![""](https://raw.githubusercontent.com/Julioalbornozv/cc5114/master/Tarea%201/Images/tr_mse.png?raw=true)
 
-![Confusion matrix](https://www.github.com/Julioalbornoz/cc5114/Tarea_1/Imagesconfusion.png)
+![""](https://raw.githubusercontent.com/Julioalbornozv/cc5114/master/Tarea%201/Images/confusion.png?raw=true)
