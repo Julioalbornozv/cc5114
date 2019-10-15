@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from Unit import Unit
+import random
+import numpy as np
 
 class Problem(ABC):
 	"""
@@ -6,7 +9,7 @@ class Problem(ABC):
 	"""
 	def __init__(self, target):
 		"""
-		target: Expected outcome of the algorithm
+		target: Expected outcome of the algorithm, represented as a numpy array
 		"""
 		self.target = target
 		
@@ -28,13 +31,22 @@ class Bit_Seq(Problem):
 	Find a bit sequence using a genetic algorithm
 	"""
 	def fitness_function(self, unit):
-		pass
-	
+		diff = np.bitwise_xor(unit.dna, self.target)
+		__, count = np.unique(diff, return_counts = True)
+		unit.fitness = count[0]  # count = #0, #1
+		
 	def gene_generator(self):
-		pass
+		return random.randint(0,1)
 	
 	def individual_generator(self):
-		pass
+		l = len(self.target)
+		new = np.zeros((l), dtype=int)
+		for i in range(l):
+			new[i] = self.gene_generator()
+			
+		unit = Unit(new)
+		self.fitness_function(unit)
+		return unit
 		
 class Word_Search(Problem):
 	"""

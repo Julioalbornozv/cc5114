@@ -5,8 +5,13 @@ class Unit(object):
 	"""
 	def __init__(self, genes):
 		"""
-		genes: Genetic information provided by the algorithm
+		genes: Numpy array. Genetic information provided by the algorithm 
 		"""
 		self.dna = genes
 		self.fitness = 0
 		
+	def __lt__(self, other):
+		return self.fitness < other.fitness
+		
+	def __eq__(self, other):
+		return self.fitness == other.fitness
