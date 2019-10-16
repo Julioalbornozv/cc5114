@@ -53,7 +53,7 @@ class Board(object):
 		"""
 		Executes the algorithm until the end condition is met
 		"""
-		while(self.term(self.generation) == False):	#Generalize termination condition check
+		while(self.term(self) == False):
 			self.generation += 1
 
 			### Evaluation Phase
@@ -65,7 +65,7 @@ class Board(object):
 
 			self.fit_record.append((high,avg,low))
 			
-			self["units"]
+			#self["units"]
 			### Selection Phase  #TODO: Merge this phases
 			pairs = []
 			for i in range(len(self.collection)):
@@ -80,7 +80,14 @@ class Board(object):
 				new.append(offspring)
 
 			self.collection = new
+		
+		#Saves last generation data
+		low = min(self.collection).fitness
+		high = max(self.collection).fitness
+		avg = (high + low)/2
 
+		self.fit_record.append((high,avg,low))
+		
 	def rank(self):
 		"""
 		Updates the fitness value of each individual and sorts them depending on the results
