@@ -69,7 +69,7 @@ class Word_Search(Problem):
 			if wor[i] == exp[i]:
 				match += 1
 			
-		return match
+		unit.fitness = match
 	
 	def gene_generator(self):
 		valid = "abcdefghijklmnopqrstuvwxyz"
@@ -99,7 +99,7 @@ class Unbound_Knapsack(Problem):
 			value += data[i]*const[i][1]
 		
 		if weight > self.target:
-			unit.fitness = 0
+			unit.fitness = self.target-weight
 		else:
 			unit.fitness = value
 	

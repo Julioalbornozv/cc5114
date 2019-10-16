@@ -1,5 +1,6 @@
 import Unit as U
 import numpy as np
+import random
 
 class Board(object):
 	"""
@@ -41,6 +42,13 @@ class Board(object):
 
 		self.fit_record = []
 
+	def __getitem__(self,key):
+		if key == "units":
+			for i in range(len(self.collection)):
+				print("{}\t{}".format(self.collection[i].dna,self.collection[i].fitness))
+		
+		
+		
 	def run(self):
 		"""
 		Executes the algorithm until the end condition is met
@@ -50,13 +58,14 @@ class Board(object):
 
 			### Evaluation Phase
 			self.rank()
-
+			
 			low = min(self.collection).fitness
 			high = max(self.collection).fitness
 			avg = (high + low)/2
 
 			self.fit_record.append((high,avg,low))
-
+			
+			self["units"]
 			### Selection Phase  #TODO: Merge this phases
 			pairs = []
 			for i in range(len(self.collection)):
@@ -84,7 +93,7 @@ class Board(object):
 		Selects a random set of individuals and choose the one with higher fitness
 		"""
 		selected = []
-		n_set = 10 #TODO: Make it customizable
+		n_set = 5 #TODO: Make it customizable
 		indexes = np.random.randint(low=0, high=len(self.collection)-1, size=n_set)
 		for i in indexes:
 			selected.append(self.collection[i])
@@ -95,7 +104,7 @@ class Board(object):
 		"""
 		Given two individuals, the method will split their genetic code and generate an offspring which will inherit from both parents
 		"""
-		pivot = 5 #TODO: Make it customizable
+		pivot = random.randint(0,len(pair[0].dna)-1)
 		dna = np.concatenate((pair[0].dna[0:pivot], pair[1].dna[pivot:]))
 		off = U.Unit(dna)
 		return off
@@ -108,7 +117,6 @@ class Board(object):
 		index_list = np.asarray(range(l))
 		np.random.shuffle(index_list)
 
-		for i in range(self.mut):
+		for i in index_list[:self.mut]:
 			mut = self.gene_gen()
 			unit.dna[i] = mut
-
