@@ -9,20 +9,29 @@ class Problem(ABC):
 	"""
 	def __init__(self, target):
 		"""
-		target: Expected outcome of the algorithm, represented as a numpy array
+		target: Expected outcome of the algorithm
 		"""
 		self.target = target
 		
 	@abstractmethod
 	def fitness_function(self, unit):
+		"""
+		Calculates the fitness of a given individual
+		"""
 		pass
 	
 	@abstractmethod
 	def gene_generator(self):
+		"""
+		Returns a gene of the problem
+		"""
 		pass
 	
 	@abstractmethod
 	def individual_generator(self):
+		"""
+		Generates an individual
+		"""
 		pass
 		
 
@@ -53,23 +62,57 @@ class Word_Search(Problem):
 	Find a string using a genetic algorithm
 	"""
 	def fitness_function(self, unit):
-		pass
+		match = 0
+		wor = self.target
+		exp = unit.dna
+		for i in range(len(wor)):
+			if wor[i] == exp[i]:
+				match += 1
+			
+		return match
 	
 	def gene_generator(self):
-		pass
+		valid = "abcdefghijklmnopqrstuvwxyz"
+		return valid[random.randint(0,len(valid)-1)]
 	
 	def individual_generator(self):
-		pass
-
+		l = len(self.target)
+		fill = ["a"]*l
+		new = np.array(fill)
+		for i in range(l):
+			new[i] = self.gene_generator()
+		
+		unit = Unit(new)
+		self.fitness_function(unit)
+		return unit
+		
 class Unbound_Knapsack(Problem):
 	"""
-	Find a combination of boxes of fixed weight which maximize the capacity of backpack of limited capacity using a genetic algorithm
+	Find the combination of boxes of fixed weight and value which maximize the value contained in a backpack of limited capacity using a genetic algorithm
 	"""
 	def fitness_function(self, unit):
-		pass
+		const = [(12, 4), (2, 2), (1, 2), (1, 1), (4, 10)]  	#(weight, value)
+		data = unit.dna
+		weight, value = 0, 0
+		for i in range(len(data)):
+			weight += data[i]*const[i][0]
+			value += data[i]*const[i][1]
+		
+		if weight > self.target:
+			unit.fitness = 0
+		else:
+			unit.fitness = value
 	
 	def gene_generator(self):
-		pass
+		return random.randint(0,self.target)
 	
 	def individual_generator(self):
-		pass
+		l = 5	#Generalize for n box types
+		new = np.zeros((l))
+		for i in range(l):
+			new[i] = self.gene_generator()
+		
+		unit = Unit(new)
+		self.fitness_function(unit)
+		return unit
+
