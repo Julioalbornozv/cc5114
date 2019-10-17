@@ -49,7 +49,18 @@ class Board(object):
 				print("{}\t{}".format(self.collection[i].dna,self.collection[i].fitness))
 		
 		
-		
+	def reset(self):
+		"""
+		Resets previous results
+		"""
+		self.collection = []
+		for unit in range(self.pop):
+			self.collection.append(self.unit_gen())
+			
+		self.generation = 0
+		self.fit_record = []
+		self.best = U.Unit("")
+	
 	def run(self):
 		"""
 		Executes the algorithm until the end condition is met
