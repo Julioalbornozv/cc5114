@@ -91,20 +91,18 @@ class Unbound_Knapsack(Problem):
 	Find the combination of boxes of fixed weight and value which maximize the value contained in a backpack of limited capacity using a genetic algorithm
 	"""
 	def fitness_function(self, unit):
-		const = [(12, 4), (2, 2), (1, 2), (1, 1), (4, 10)]  	#(weight, value)
-		data = unit.dna
-		weight, value = 0, 0
-		for i in range(len(data)):
-			weight += data[i]*const[i][0]
-			value += data[i]*const[i][1]
+		weights = np.array([12,2,1,1,4])
+		values = np.array([4,2,2,1,10])
 		
-		if weight > self.target:
-			unit.fitness = self.target-weight
-		else:
-			unit.fitness = value
+		data = unit.dna
+		
+		load_w = np.multiply(weights, data)
+		load_v = np.multiply(values, data)
+		
+		unit.fitness = np.sum(load_v) - (np.sum(load_w) * abs(self.target - np.sum(load_w)))
 	
 	def gene_generator(self):
-		return random.randint(0,self.target)
+		return random.randint(0,15)
 	
 	def individual_generator(self):
 		l = 5	#Generalize for n box types

@@ -41,6 +41,7 @@ class Board(object):
 			self.collection.append(self.unit_gen())
 
 		self.fit_record = []
+		self.best = U.Unit("")
 
 	def __getitem__(self,key):
 		if key == "units":
@@ -55,10 +56,13 @@ class Board(object):
 		"""
 		while(self.term(self) == False):
 			self.generation += 1
-
+			
 			### Evaluation Phase
 			self.rank()
 			
+			if max(self.collection).fitness > self.best.fitness:
+				self.best = max(self.collection)
+				
 			low = min(self.collection).fitness
 			high = max(self.collection).fitness
 			avg = (high + low)/2
@@ -82,6 +86,9 @@ class Board(object):
 			self.collection = new
 		
 		#Saves last generation data
+		if max(self.collection).fitness > self.best.fitness:
+			self.best = max(self.collection)
+			
 		low = min(self.collection).fitness
 		high = max(self.collection).fitness
 		avg = (high + low)/2

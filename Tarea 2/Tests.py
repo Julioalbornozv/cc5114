@@ -66,11 +66,12 @@ def string_search_test():
 	
 def knapsack_test():
 	UK = Pb.Unbound_Knapsack(15)
-	gen = GA.Board(UK.fitness_function, UK.gene_generator, UK.individual_generator, 10, 2, time_limit)
+	gen = GA.Board(UK.fitness_function, UK.gene_generator, UK.individual_generator, 100, 2, time_limit)
 
 	gen.run()
+	print("Result:\t{}\t{}".format(gen.best.dna, gen.best.fitness))
 	plot_results(gen.fit_record)
 
 bit_sequence_test()
 string_search_test()
-#knapsack_test()
+knapsack_test()
