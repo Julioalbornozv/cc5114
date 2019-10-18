@@ -19,13 +19,16 @@ class Board(object):
 		pop_size:		Population size
 		mut_rate:		Mutation Rate (As the number of genes to be modified)
 		termination:	Termintion Condition
-		----------------------------------------
+		----------------------------------------------------------------------------
 
 		Local Sets:
 		-----------
 		collection:		Set of individuals being simuated
 		generation:		Current generation being simulated
-
+		best:			Individual with the best fitness overall
+		best_time:		Generation in which the current best was generated
+		fit_record:		Record of the fitness score from the best, worst and average
+		                performers
 		"""
 		self.fitness = fitness_func
 		self.gene_gen = gene_gen
@@ -42,12 +45,7 @@ class Board(object):
 
 		self.fit_record = []
 		self.best = U.Unit("")
-
-	def __getitem__(self,key):
-		if key == "units":
-			for i in range(len(self.collection)):
-				print("{}\t{}".format(self.collection[i].dna,self.collection[i].fitness))
-		
+		self.best_time = 0		
 		
 	def reset(self):
 		"""
@@ -61,6 +59,20 @@ class Board(object):
 		self.fit_record = []
 		self.best = U.Unit("")
 	
+	def recover(self):
+		"""
+		Saves relevant data
+		"""
+		if max(self.collection).fitness > self.best.fitness:
+			self.best = max(self.collection)
+			self.best_time = self.generation
+				
+		low = min(self.collection).fitness
+		high = max(self.collection).fitness
+		avg = (high + low)/2
+
+		self.fit_record.append((high,avg,low))
+	
 	def run(self):
 		"""
 		Executes the algorithm until the end condition is met
@@ -70,18 +82,9 @@ class Board(object):
 			
 			### Evaluation Phase
 			self.rank()
+			self.recover()
 			
-			if max(self.collection).fitness > self.best.fitness:
-				self.best = max(self.collection)
-				
-			low = min(self.collection).fitness
-			high = max(self.collection).fitness
-			avg = (high + low)/2
-
-			self.fit_record.append((high,avg,low))
-			
-			#self["units"]
-			### Selection Phase  #TODO: Merge this phases
+			### Selection Phase
 			pairs = []
 			for i in range(len(self.collection)):
 				pairs.append((self.tournament(), self.tournament()))
@@ -97,14 +100,8 @@ class Board(object):
 			self.collection = new
 		
 		#Saves last generation data
-		if max(self.collection).fitness > self.best.fitness:
-			self.best = max(self.collection)
-			
-		low = min(self.collection).fitness
-		high = max(self.collection).fitness
-		avg = (high + low)/2
-
-		self.fit_record.append((high,avg,low))
+		self.rank()
+		self.recover()
 		
 	def rank(self):
 		"""
@@ -118,7 +115,7 @@ class Board(object):
 		Selects a random set of individuals and choose the one with higher fitness
 		"""
 		selected = []
-		n_set = 5 #TODO: Make it customizable
+		n_set = 5
 		indexes = np.random.randint(low=0, high=len(self.collection)-1, size=n_set)
 		for i in indexes:
 			selected.append(self.collection[i])

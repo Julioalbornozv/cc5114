@@ -42,7 +42,7 @@ class Bit_Seq(Problem):
 	def fitness_function(self, unit):
 		diff = np.bitwise_xor(unit.dna, self.target)
 		__, count = np.unique(diff, return_counts = True)
-		unit.fitness = count[0]  # count = #0, #1
+		unit.fitness = count[0]
 		
 	def gene_generator(self):
 		return random.randint(0,1)
