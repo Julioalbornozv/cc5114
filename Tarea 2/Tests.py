@@ -153,7 +153,7 @@ Main
 """
 
 #Initialize Problem objects
-targets = [np.array(list(bin(7548))[2:]).astype(int),
+targets = [np.array(list(bin(7548))[2:]).astype(int),	#1 1 1 0 1 0 1 1 1 1 1 0 0
 			np.array(list("helloworld")),
 			15]
 			
