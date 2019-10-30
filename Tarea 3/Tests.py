@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+import Nodes as N
 
 """
 Termination Conditions
@@ -15,7 +16,7 @@ def time_limit(board):
 	"""
 	Terminates process after a number of generations have passed
 	"""
-	if board.generation > 300:
+	if board.generation > 5:
 		return True
 	else:
 		return False
@@ -48,7 +49,7 @@ def variation_limit(board):
 Problem Analysis
 """
 
-def solve(Problem, fit_pair, range, term_func):
+def solve(Problem, fit_pair, range, term_func, func_set, val_set):
 	"""
 	Solves a problem using a genetic algorithm, returns a fitness plot and a performance heatmap.
 
@@ -56,9 +57,10 @@ def solve(Problem, fit_pair, range, term_func):
 	@param fit_pair: Tuple containing the population and mutation rate used for the fitness analysis
 	@param range: Tuple containing the population and mutation ranges to be analysed
 	@param term_func: Termination function to be used
+	
 	"""
 	
-	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func)
+	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func, func_set, val_set)
 
 	gen.run()
 	print("Result found:\t{}\tF:\t{}".format(gen.best.dna, gen.best.fitness))
@@ -153,27 +155,39 @@ Main
 """
 
 #Initialize Problem objects
-targets = [np.array(list(bin(7548))[2:]).astype(int),	#1 1 1 0 1 0 1 1 1 1 1 0 0
-			np.array(list("helloworld")),
-			15]
+targets = [10,
+			65346
+			]
 			
-P1 = Pb.Bit_Seq(targets[0])
-P2 = Pb.Word_Search(targets[1])
-P3 = Pb.Unbound_Knapsack(targets[2])
+P1_0 = Pb.Find_Number(targets[0])	# Original Problem
+#P1_a = Pb.Find_Number(targets[1])	# Multiple Repetitions
+#P1_b = Pb.Find_Number(targets[1])	# Anti-growth fitness
+#P1_c = Pb.Find_Number(targets[1])	# No Repetition
+#P2 = Pb.Word_Search(targets[1])
+#P3 = Pb.Unbound_Knapsack(targets[2])
 
 #Generate ranges to be evaluated for each problem
 
 R1 = np.arange(50,300,50), np.arange(0,8)
-R2 = np.arange(50,300,50), np.arange(0,8)
-R3 = np.arange(50,300,50), np.arange(0,4)
+#R2 = np.arange(50,300,50), np.arange(0,8)
+#R3 = np.arange(50,300,50), np.arange(0,4)
 
+#Define sets to be used
+
+S1_0 = ([N.AddNode, N.SubNode, N.MultNode], [2,5,5])
+#S1_a = ([N.AddNode, N.SubNode, N.MultNode, T.MaxNode], [25, 7, 8, 100, 4, 2])
+#S1_b = ([N.AddNode, N.SubNode, N.MultNode, T.MaxNode], [25, 7, 8, 100, 4, 2])
+#S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
 #Run algorithms
 print("P1")
-solve(P1, (100, 2), R1, fitness_limit)
-print("P2")
-solve(P2, (100, 1), R2, fitness_limit)
-print("P3")
-solve(P3, (100, 2), R3, variation_limit)
+solve(P1_0, (100, 2), R1, time_limit, S1_0[0], S1_0[1])
+#solve(P1_a, (100, 2), R1, fitness_limit, S1_a[0], S1_a[1])
+#solve(P1_b, (100, 2), R1, fitness_limit, S1_b[0], S1_b[1])
+#solve(P1_c, (100, 2), R1, fitness_limit, S1_c[0], S1_c[1])
+#print("P2")
+#solve(P2, (100, 1), R2, fitness_limit)
+#print("P3")
+#solve(P3, (100, 2), R3, variation_limit)
 
 
 

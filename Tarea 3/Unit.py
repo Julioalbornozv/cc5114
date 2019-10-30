@@ -3,11 +3,11 @@ class Unit(object):
 	"""
 	Class representing an individual
 	"""
-	def __init__(self, genes):
+	def __init__(self, tree):
 		"""
-		genes: Numpy array. Genetic information provided by the algorithm 
+		tree: AST representing a program
 		"""
-		self.dna = genes
+		self.dna = tree
 		self.fitness = 0
 		
 	def __lt__(self, other):

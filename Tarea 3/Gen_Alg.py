@@ -1,12 +1,14 @@
 import Unit as U
 import numpy as np
 import random
+import Tree as T
+import pdb
 
 class Board(object):
 	"""
 	Genetic algorithm class
 	"""
-	def __init__(self, fitness_func, gene_gen, unit_gen, pop_size, mut_rate, termination):
+	def __init__(self, fitness_func, gene_gen, unit_gen, pop_size, mut_rate, termination, func_set, var_set):
 		"""
 		Methods:
 		--------
@@ -19,6 +21,9 @@ class Board(object):
 		pop_size:		Population size
 		mut_rate:		Mutation Rate (As the number of genes to be modified)
 		termination:	Termintion Condition
+		func_set:		Function Set for the internal nodes
+		var_set:		Concrete values for the leaves
+		
 		----------------------------------------------------------------------------
 
 		Local Sets:
@@ -29,6 +34,7 @@ class Board(object):
 		best_time:		Generation in which the current best was generated
 		fit_record:		Record of the fitness score from the best, worst and average
 		                performers
+		
 		"""
 		self.fitness = fitness_func
 		self.gene_gen = gene_gen
@@ -36,15 +42,17 @@ class Board(object):
 		self.pop = pop_size
 		self.mut = mut_rate
 		self.term = termination
+		self.func_set = func_set
+		self.var_set = var_set
 
 		self.collection = []
 		self.generation = 0
 
 		for unit in range(pop_size):
-			self.collection.append(self.unit_gen())
+			self.collection.append(self.unit_gen(self.func_set, self.var_set))
 
 		self.fit_record = []
-		self.best = U.Unit("")
+		self.best = U.Unit(None)	#TODO: See if None is enough, if not I need to create an empty tree
 		self.best_time = 0		
 		
 	def reset(self):
@@ -53,11 +61,11 @@ class Board(object):
 		"""
 		self.collection = []
 		for unit in range(self.pop):
-			self.collection.append(self.unit_gen())
+			self.collection.append(self.unit_gen(self.func_set, self.var_set))
 			
 		self.generation = 0
 		self.fit_record = []
-		self.best = U.Unit("")
+		self.best = U.Unit(None)	#TODO: Same here
 	
 	def recover(self):
 		"""
@@ -126,19 +134,25 @@ class Board(object):
 		"""
 		Given two individuals, the method will split their genetic code and generate an offspring which will inherit from both parents
 		"""
-		pivot = random.randint(0,len(pair[0].dna)-1)
-		dna = np.concatenate((pair[0].dna[0:pivot], pair[1].dna[pivot:]))
-		off = U.Unit(dna)
-		return off
+		new_element = pair[0].dna.copy()
+		p1 = random.choice(new_element.serialize())
+		
+		p2_node = random.choice(pair[1].dna.serialize())
+		p2 = p2_node.copy()
+		
+		p1.replace(p2)
+		
+		offspring = U.Unit(new_element)
+		return offspring
 
 	def mutate(self, unit):
 		"""
-		Replaces certain genes of an individual with new data
+		Overrides a number of tree nodes from an individual AST
 		"""
-		l = len(unit.dna)
-		index_list = np.asarray(range(l))
-		np.random.shuffle(index_list)
-
-		for i in index_list[:self.mut]:
-			mut = self.gene_gen()
-			unit.dna[i] = mut
+		#pdb.set_trace()
+		nodes = unit.dna.serialize()
+		for i in range(self.mut):
+			mutation = T.AST(self.func_set, self.var_set)()
+			chosen = random.choice(nodes)
+			chosen.replace(mutation)
+			
