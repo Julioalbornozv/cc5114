@@ -8,6 +8,7 @@ from matplotlib import cm
 
 import Nodes as N
 
+import pdb
 """
 Termination Conditions
 """
@@ -16,7 +17,7 @@ def time_limit(board):
 	"""
 	Terminates process after a number of generations have passed
 	"""
-	if board.generation > 5:
+	if board.generation > 50:
 		return True
 	else:
 		return False
@@ -31,7 +32,7 @@ def fitness_limit(board):
 	if time_limit(board):
 		return True
 	
-	elif top.fitness == len(top.dna):
+	elif top.fitness == 1: # Normalized fitness
 		return True
 	else:
 		return False
@@ -63,13 +64,13 @@ def solve(Problem, fit_pair, range, term_func, func_set, val_set):
 	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func, func_set, val_set)
 
 	gen.run()
-	print("Result found:\t{}\tF:\t{}".format(gen.best.dna, gen.best.fitness))
+	print("Result found:\t{}\tF:\t{}\nT:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna))
 	plot_results(gen.fit_record)	
 
 	#Performance analysis
-	gen.reset()
-	print("Obtaining performance matrix...")
-	configuration_test(gen, range[0], range[1])
+	#gen.reset()
+	#print("Obtaining performance matrix...")
+	#configuration_test(gen, range[0], range[1])
 
 def configuration_test(gen, x_range, y_range):
 	"""
@@ -114,7 +115,7 @@ def plot_results(fitness):
 	best = fit_reg[:,0]
 	avg = fit_reg[:,1]
 	worst = fit_reg[:,2]
-	
+	#pdb.set_trace()
 	plt.plot(best)
 	plt.plot(avg)
 	plt.plot(worst)
@@ -155,14 +156,12 @@ Main
 """
 
 #Initialize Problem objects
-targets = [10,
-			65346
+targets = [65346
 			]
 			
-P1_0 = Pb.Find_Number(targets[0])	# Original Problem
-#P1_a = Pb.Find_Number(targets[1])	# Multiple Repetitions
-#P1_b = Pb.Find_Number(targets[1])	# Anti-growth fitness
-#P1_c = Pb.Find_Number(targets[1])	# No Repetition
+P1_a = Pb.Find_Number(targets[0])	# Multiple Repetitions
+#P1_b = Pb.Find_Number(targets[0])	# Anti-growth fitness
+#P1_c = Pb.Find_Number(targets[0])	# No Repetition
 #P2 = Pb.Word_Search(targets[1])
 #P3 = Pb.Unbound_Knapsack(targets[2])
 
@@ -174,14 +173,12 @@ R1 = np.arange(50,300,50), np.arange(0,8)
 
 #Define sets to be used
 
-S1_0 = ([N.AddNode, N.SubNode, N.MultNode], [2,5,5])
-#S1_a = ([N.AddNode, N.SubNode, N.MultNode, T.MaxNode], [25, 7, 8, 100, 4, 2])
+S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
 #S1_b = ([N.AddNode, N.SubNode, N.MultNode, T.MaxNode], [25, 7, 8, 100, 4, 2])
 #S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
 #Run algorithms
 print("P1")
-solve(P1_0, (100, 2), R1, time_limit, S1_0[0], S1_0[1])
-#solve(P1_a, (100, 2), R1, fitness_limit, S1_a[0], S1_a[1])
+solve(P1_a, (100, 2), R1, fitness_limit, S1_a[0], S1_a[1])
 #solve(P1_b, (100, 2), R1, fitness_limit, S1_b[0], S1_b[1])
 #solve(P1_c, (100, 2), R1, fitness_limit, S1_c[0], S1_c[1])
 #print("P2")

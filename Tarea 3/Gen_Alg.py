@@ -52,7 +52,7 @@ class Board(object):
 			self.collection.append(self.unit_gen(self.func_set, self.var_set))
 
 		self.fit_record = []
-		self.best = U.Unit(None)	#TODO: See if None is enough, if not I need to create an empty tree
+		self.best = U.Unit(None)
 		self.best_time = 0		
 		
 	def reset(self):
@@ -65,12 +65,13 @@ class Board(object):
 			
 		self.generation = 0
 		self.fit_record = []
-		self.best = U.Unit(None)	#TODO: Same here
+		self.best = U.Unit(None)
 	
 	def recover(self):
 		"""
 		Saves relevant data
 		"""
+		#pdb.set_trace()
 		if max(self.collection).fitness > self.best.fitness:
 			self.best = max(self.collection)
 			self.best_time = self.generation
@@ -134,6 +135,7 @@ class Board(object):
 		"""
 		Given two individuals, the method will split their genetic code and generate an offspring which will inherit from both parents
 		"""
+		pdb.set_trace()
 		new_element = pair[0].dna.copy()
 		p1 = random.choice(new_element.serialize())
 		

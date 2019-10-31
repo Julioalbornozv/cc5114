@@ -3,7 +3,7 @@ from Unit import Unit
 import random
 import numpy as np
 import Tree as T
-
+import pdb
 class Problem(ABC):
 	"""
 	Class which contains all problem-dependent methods/classes, define each problem by inheriting from this abstract class and defining the methods required by the algorithm
@@ -40,7 +40,8 @@ class Find_Number(Problem):
 	Find a tree structure that when evaluated it will return a specific number
 	"""
 	def fitness_function(self, unit):
-		self.target - np.abs(unit.dna.eval() - self.target)
+		#pdb.set_trace()
+		unit.fitness = 1.0 / (1.0 + np.abs(unit.dna.eval() - self.target))
 	
 	def gene_generator(self, function_set, value_set):
 		"""

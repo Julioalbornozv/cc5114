@@ -61,7 +61,18 @@ class Node:
 		assert isinstance(otherNode, Node)
 		self.__class__ = otherNode.__class__
 		self.__dict__ = otherNode.__dict__
-
+	
+	#Calcula recursivamente la altura de arbol
+	def measure(self, n = 0):
+		max = n
+		for val in self.arguments:
+			v = val.measure(n+1)
+			if v > max:
+				max = v
+		return max
+				
+				
+		
 
 # esta clase representa todos los nodos quetienen 2 argumentos
 class BinaryNode(Node):
@@ -135,3 +146,6 @@ class TerminalNode(Node):
 	def eval(self):
 		# la evaluacion de un nodo terminal es el valor que contiene
 		return self.value
+	
+	def measure(self,n):
+		return n
