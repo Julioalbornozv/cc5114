@@ -16,7 +16,7 @@ class AST:
 	# esta funcion ya la hemos visto, nos permite llamar al AST como si fuera
 	# una funcion. max_depth es la produndidad que queremos tenga el arbol
 	
-	def __call__(self, max_depth=10):
+	def __call__(self, max_depth=4):
 		# aqui tenemos una funcion auxiliar. Nos permitira hacer esto recursivo
 		def create_rec_tree(depth):
 			# si `depth` es mayor a 0, nos toca crear un sub-arbol

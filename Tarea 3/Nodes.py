@@ -70,9 +70,13 @@ class Node:
 			if v > max:
 				max = v
 		return max
-				
-				
-		
+	
+	#Retorna diccionario con la cantidad de nodos terminales de cada tipo
+	def count(self, dict):
+		for arg in self.arguments:
+			arg.count(dict)
+			
+		return dict
 
 # esta clase representa todos los nodos quetienen 2 argumentos
 class BinaryNode(Node):
@@ -149,3 +153,10 @@ class TerminalNode(Node):
 	
 	def measure(self,n):
 		return n
+		
+	def count(self, dict):
+		counter = dict.get(self.value)
+		if counter == None:
+			counter = 0
+		
+		dict.update({self.value: counter+1})

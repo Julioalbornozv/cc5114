@@ -41,7 +41,7 @@ def variation_limit(board):
 	"""
 	Terminates the process if the best unit remain the same for a fixed number of generations
 	"""
-	if board.generation-board.best_time > 300:
+	if board.generation-board.best_time > 500:
 		return True
 	
 	return False
@@ -64,7 +64,7 @@ def solve(Problem, fit_pair, range, term_func, func_set, val_set):
 	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func, func_set, val_set)
 
 	gen.run()
-	print("Result found:\t{}\tF:\t{}\nT:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna))
+	print("Result found:\t{}\tF:\t{}\nV:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna.eval()))
 	plot_results(gen.fit_record)	
 
 	#Performance analysis
@@ -159,7 +159,7 @@ Main
 targets = [65346
 			]
 			
-P1_a = Pb.Find_Number(targets[0])	# Multiple Repetitions
+P1_a = Pb.Find_Number(targets[0], repetition = False)	# Multiple Repetitions
 #P1_b = Pb.Find_Number(targets[0])	# Anti-growth fitness
 #P1_c = Pb.Find_Number(targets[0])	# No Repetition
 #P2 = Pb.Word_Search(targets[1])
@@ -174,11 +174,11 @@ R1 = np.arange(50,300,50), np.arange(0,8)
 #Define sets to be used
 
 S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-#S1_b = ([N.AddNode, N.SubNode, N.MultNode, T.MaxNode], [25, 7, 8, 100, 4, 2])
-#S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
+#S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
 #Run algorithms
 print("P1")
-solve(P1_a, (100, 2), R1, fitness_limit, S1_a[0], S1_a[1])
+solve(P1_a, (100, 2), R1, variation_limit, S1_c[0], S1_c[1])
 #solve(P1_b, (100, 2), R1, fitness_limit, S1_b[0], S1_b[1])
 #solve(P1_c, (100, 2), R1, fitness_limit, S1_c[0], S1_c[1])
 #print("P2")

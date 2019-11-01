@@ -8,11 +8,12 @@ class Problem(ABC):
 	"""
 	Class which contains all problem-dependent methods/classes, define each problem by inheriting from this abstract class and defining the methods required by the algorithm
 	"""
-	def __init__(self, target):
+	def __init__(self, target, **kwargs):
 		"""
 		target: Expected outcome of the algorithm
 		"""
 		self.target = target
+		self.specs = kwargs
 		
 	@abstractmethod
 	def fitness_function(self, unit):
@@ -41,7 +42,9 @@ class Find_Number(Problem):
 	"""
 	def fitness_function(self, unit):
 		#pdb.set_trace()
-		unit.fitness = 1.0 / (1.0 + np.abs(unit.dna.eval() - self.target))
+		counters = unit.dna.count({})
+		repeats = sum(counters.values()) - len(counters.values())
+		unit.fitness = 1.0 / (unit.dna.measure()*repeats + np.abs(unit.dna.eval() - self.target))
 	
 	def gene_generator(self, function_set, value_set):
 		"""

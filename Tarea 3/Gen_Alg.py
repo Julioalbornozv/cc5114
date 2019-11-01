@@ -135,7 +135,7 @@ class Board(object):
 		"""
 		Given two individuals, the method will split their genetic code and generate an offspring which will inherit from both parents
 		"""
-		pdb.set_trace()
+		#pdb.set_trace()
 		new_element = pair[0].dna.copy()
 		p1 = random.choice(new_element.serialize())
 		
