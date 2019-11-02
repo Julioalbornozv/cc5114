@@ -41,7 +41,6 @@ class Find_Number(Problem):
 	Find a tree structure that when evaluated it will return a specific number
 	"""
 	def fitness_function(self, unit):
-		#pdb.set_trace()
 		counters = unit.dna.count({})
 		repeats = sum(counters.values()) - len(counters.values())
 		unit.fitness = 1.0 / (unit.dna.measure()*repeats + np.abs(unit.dna.eval() - self.target))
@@ -58,9 +57,12 @@ class Find_Number(Problem):
 		self.fitness_function(unit)
 		return unit
 	
-class Variable_Teminals(Problem):
+class Variable_Terminals(Problem):
 	def fitness_function(self, unit):
-		pass
+		#pdb.set_trace()
+		counters = unit.dna.count({})
+		repeats = sum(counters.values()) - len(counters.values())
+		unit.fitness = 1.0 / (unit.dna.measure()*repeats + np.abs(unit.dna.eval_env(self.specs.get("env")) - self.target))
 		
 	def gene_generator(self, function_set, value_set):
 		"""
@@ -70,7 +72,7 @@ class Variable_Teminals(Problem):
 		
 	def individual_generator(self, func_set, val_set):
 		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree)
+		unit = Unit(tree())
 		self.fitness_function(unit)
 		return unit
 		

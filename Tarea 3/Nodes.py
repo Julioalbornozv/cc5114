@@ -2,6 +2,7 @@
 from copy import deepcopy
 # random
 import random
+import pdb
 
 # esta funcion dice si el argumento es una funcion o no
 def is_function(f):
@@ -39,6 +40,12 @@ class Node:
 		# lo necesitamos porque nuestra funcion recibe N argumentos
 		# no una lista de tamaño N.
 		return self.operation(*[node.eval() for node in self.arguments])
+	
+	# Evalua operaciones considerando valores de variables entregados or dict
+	def eval_env(self, dict):
+		assert len(self.arguments) == self.num_arguments
+		#pdb.set_trace()
+		return self.operation(*[node.eval_env(dict) for node in self.arguments])
 	
 	# hace una lista con todos los hijos
 	def serialize(self):
@@ -150,6 +157,13 @@ class TerminalNode(Node):
 	def eval(self):
 		# la evaluacion de un nodo terminal es el valor que contiene
 		return self.value
+		
+	def eval_env(self, dict):
+		traslation = dict.get(self.value)
+		if traslation != None:
+			return traslation
+		else:
+			return self.value
 	
 	def measure(self,n):
 		return n

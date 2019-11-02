@@ -64,7 +64,7 @@ def solve(Problem, fit_pair, range, term_func, func_set, val_set):
 	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func, func_set, val_set)
 
 	gen.run()
-	print("Result found:\t{}\tF:\t{}\nV:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna.eval()))
+	print("Result found:\t{}\tF:\t{}\nV:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna.eval_env(Problem.specs.get("env"))))
 	plot_results(gen.fit_record)	
 
 	#Performance analysis
@@ -159,30 +159,31 @@ Main
 targets = [65346
 			]
 			
-P1_a = Pb.Find_Number(targets[0], repetition = False)	# Multiple Repetitions
+#P1_a = Pb.Find_Number(targets[0], repetition = False)	# Multiple Repetitions
 #P1_b = Pb.Find_Number(targets[0])	# Anti-growth fitness
 #P1_c = Pb.Find_Number(targets[0])	# No Repetition
-#P2 = Pb.Word_Search(targets[1])
+P2 = Pb.Variable_Terminals(targets[0], env = {"x": 12, "y": 5, "z": 18})
 #P3 = Pb.Unbound_Knapsack(targets[2])
 
 #Generate ranges to be evaluated for each problem
 
-R1 = np.arange(50,300,50), np.arange(0,8)
-#R2 = np.arange(50,300,50), np.arange(0,8)
+#R1 = np.arange(50,300,50), np.arange(0,8)
+R2 = np.arange(50,300,50), np.arange(0,8)
 #R3 = np.arange(50,300,50), np.arange(0,4)
 
 #Define sets to be used
 
-S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+#S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
 #S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
+#S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
+S2 = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, "x", 100, "y", "z"])
 #Run algorithms
-print("P1")
-solve(P1_a, (100, 2), R1, variation_limit, S1_c[0], S1_c[1])
+#print("P1")
+#solve(P1_a, (100, 2), R1, variation_limit, S1_c[0], S1_c[1])
 #solve(P1_b, (100, 2), R1, fitness_limit, S1_b[0], S1_b[1])
 #solve(P1_c, (100, 2), R1, fitness_limit, S1_c[0], S1_c[1])
-#print("P2")
-#solve(P2, (100, 1), R2, fitness_limit)
+print("P2")
+solve(P2, (100, 2), R2, time_limit, S2[0], S2[1])
 #print("P3")
 #solve(P3, (100, 2), R3, variation_limit)
 
