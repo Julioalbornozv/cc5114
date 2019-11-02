@@ -50,7 +50,7 @@ def variation_limit(board):
 Problem Analysis
 """
 
-def solve(Problem, fit_pair, range, term_func, func_set, val_set):
+def solve(Problem, fit_pair, range, term_func, func_set, val_set, eval_method = N.Node.eval):
 	"""
 	Solves a problem using a genetic algorithm, returns a fitness plot and a performance heatmap.
 
@@ -159,31 +159,34 @@ Main
 targets = [65346
 			]
 			
-#P1_a = Pb.Find_Number(targets[0], repetition = False)	# Multiple Repetitions
-#P1_b = Pb.Find_Number(targets[0])	# Anti-growth fitness
-#P1_c = Pb.Find_Number(targets[0])	# No Repetition
-P2 = Pb.Variable_Terminals(targets[0], env = {"x": 12, "y": 5, "z": 18})
+P1_a = Pb.Find_Number(targets[0], repetition = True, prune = False, env = dict({}))	# Multiple Repetitions
+P1_b = Pb.Find_Number(targets[0], repetition = True, prune = True, env = dict({}))	# Anti-growth fitness
+P1_c = Pb.Find_Number(targets[0], repetition = False, prune = True, env = dict({}))	# No Repetition
+P2 = Pb.Find_Number(targets[0], env = {"x": 12, "y": 5, "z": 18}, repetition = False, prune = True)
 #P3 = Pb.Unbound_Knapsack(targets[2])
 
 #Generate ranges to be evaluated for each problem
 
-#R1 = np.arange(50,300,50), np.arange(0,8)
+R1 = np.arange(50,300,50), np.arange(0,8)
 R2 = np.arange(50,300,50), np.arange(0,8)
 #R3 = np.arange(50,300,50), np.arange(0,4)
 
 #Define sets to be used
 
-#S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-#S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-#S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
+S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
 S2 = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, "x", 100, "y", "z"])
 #Run algorithms
-#print("P1")
-#solve(P1_a, (100, 2), R1, variation_limit, S1_c[0], S1_c[1])
-#solve(P1_b, (100, 2), R1, fitness_limit, S1_b[0], S1_b[1])
-#solve(P1_c, (100, 2), R1, fitness_limit, S1_c[0], S1_c[1])
+print("P1")
+print("a)")
+solve(P1_a, (100, 2), R1, time_limit, S1_a[0], S1_a[1])
+print("b)")
+solve(P1_b, (100, 2), R1, time_limit, S1_b[0], S1_b[1])
+print("c)")
+solve(P1_c, (100, 2), R1, time_limit, S1_c[0], S1_c[1])
 print("P2")
-solve(P2, (100, 2), R2, time_limit, S2[0], S2[1])
+solve(P2, (100, 2), R2, time_limit, S2[0], S2[1], eval_method = N.Node.eval_env)
 #print("P3")
 #solve(P3, (100, 2), R3, variation_limit)
 

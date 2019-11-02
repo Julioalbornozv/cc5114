@@ -42,28 +42,20 @@ class Find_Number(Problem):
 	"""
 	def fitness_function(self, unit):
 		counters = unit.dna.count({})
-		repeats = sum(counters.values()) - len(counters.values())
-		unit.fitness = 1.0 / (unit.dna.measure()*repeats + np.abs(unit.dna.eval() - self.target))
-	
-	def gene_generator(self, function_set, value_set):
-		"""
-		In this case the genes are replaced with a tree
-		"""
-		return T.AST(function_set, value_set)
+		repeats, growth = 1, 1
 		
-	def individual_generator(self, func_set, val_set):
-		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree())
-		self.fitness_function(unit)
-		return unit
-	
-class Variable_Terminals(Problem):
-	def fitness_function(self, unit):
-		#pdb.set_trace()
-		counters = unit.dna.count({})
-		repeats = sum(counters.values()) - len(counters.values())
-		unit.fitness = 1.0 / (unit.dna.measure()*repeats + np.abs(unit.dna.eval_env(self.specs.get("env")) - self.target))
+		if self.specs.get("repetition") == False:
+			repeats = sum(counters.values()) - len(counters.values())
+			
+		if self.specs.get("prune") == True:
+			growth = unit.dna.measure()
 		
+		vars = self.specs.get("env")
+		if vars != None:
+			unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval_env(self.specs.get("env")) - self.target))
+		else:
+			unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval() - self.target))
+	
 	def gene_generator(self, function_set, value_set):
 		"""
 		In this case the genes are replaced with a tree
