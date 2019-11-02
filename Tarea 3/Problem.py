@@ -8,11 +8,12 @@ class Problem(ABC):
 	"""
 	Class which contains all problem-dependent methods/classes, define each problem by inheriting from this abstract class and defining the methods required by the algorithm
 	"""
-	def __init__(self, target, **kwargs):
+	def __init__(self, target, env = {}, **kwargs):
 		"""
 		target: Expected outcome of the algorithm
 		"""
 		self.target = target
+		self.env = env
 		self.specs = kwargs
 		
 	@abstractmethod
@@ -70,7 +71,10 @@ class Find_Number(Problem):
 		
 class Symbolic_Regression(Problem):
 	def fitness_function(self, unit):
-		pass
+		#pdb.set_trace()
+		growth = unit.dna.measure()
+		expected = self.target.eval_env(self.env)
+		unit.fitness = 1.0 / (growth + np.abs(unit.dna.eval_env(self.env)-expected))
 		
 	def gene_generator(self, function_set, value_set):
 		"""
@@ -79,8 +83,9 @@ class Symbolic_Regression(Problem):
 		return T.AST(function_set, value_set)
 		
 	def individual_generator(self, func_set, val_set):
+		#pdb.set_trace()
 		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree)
+		unit = Unit(tree())
 		self.fitness_function(unit)
 		return unit
 

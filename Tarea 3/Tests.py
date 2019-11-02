@@ -64,7 +64,7 @@ def solve(Problem, fit_pair, range, term_func, func_set, val_set, eval_method = 
 	gen = GA.Board(Problem.fitness_function, Problem.gene_generator, Problem.individual_generator, fit_pair[0], fit_pair[1], term_func, func_set, val_set)
 
 	gen.run()
-	print("Result found:\t{}\tF:\t{}\nV:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna.eval_env(Problem.specs.get("env"))))
+	print("Result found:\t{}\tF:\t{}\nV:{}".format(gen.best.dna, gen.best.fitness, gen.best.dna.eval_env(Problem.env)))
 	plot_results(gen.fit_record)	
 
 	#Performance analysis
@@ -156,39 +156,45 @@ Main
 """
 
 #Initialize Problem objects
-targets = [65346
+targets = [65346,
+			N.AddNode(N.MultNode(N.TerminalNode('x'),N.TerminalNode('x')),N.AddNode(N.TerminalNode('x'),N.TerminalNode(6)))
 			]
 			
-P1_a = Pb.Find_Number(targets[0], repetition = True, prune = False, env = dict({}))	# Multiple Repetitions
-P1_b = Pb.Find_Number(targets[0], repetition = True, prune = True, env = dict({}))	# Anti-growth fitness
-P1_c = Pb.Find_Number(targets[0], repetition = False, prune = True, env = dict({}))	# No Repetition
-P2 = Pb.Find_Number(targets[0], env = {"x": 12, "y": 5, "z": 18}, repetition = False, prune = True)
-#P3 = Pb.Unbound_Knapsack(targets[2])
+#P1_a = Pb.Find_Number(targets[0], repetition = True, prune = False, env = dict({}))	# Multiple Repetitions
+#P1_b = Pb.Find_Number(targets[0], repetition = True, prune = True, env = dict({}))	# Anti-growth fitness
+#P1_c = Pb.Find_Number(targets[0], repetition = False, prune = True, env = dict({}))	# No Repetition
+#P2 = Pb.Find_Number(targets[0], env = {"x": 12, "y": 5, "z": 18}, repetition = False, prune = True)
+P3 = Pb.Symbolic_Regression(targets[1], env = {})
 
 #Generate ranges to be evaluated for each problem
 
-R1 = np.arange(50,300,50), np.arange(0,8)
-R2 = np.arange(50,300,50), np.arange(0,8)
-#R3 = np.arange(50,300,50), np.arange(0,4)
+#R1 = np.arange(50,300,50), np.arange(0,8)
+#R2 = np.arange(50,300,50), np.arange(0,8)
+R3 = np.arange(50,300,50), np.arange(0,8)
 
 #Define sets to be used
 
-S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
-S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
-S2 = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, "x", 100, "y", "z"])
+#S1_a = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+#S1_b = ([N.AddNode, N.SubNode, N.MultNode, N.MaxNode], [25, 7, 8, 100, 4, 2])
+#S1_c = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, 8, 100, 4, 2])
+#S2 = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, "x", 100, "y", "z"])
+
+temp = list(range(-10,11))
+temp.append("x")
+S3 = ([N.AddNode, N.SubNode, N.MultNode], temp)
 #Run algorithms
-print("P1")
-print("a)")
-solve(P1_a, (100, 2), R1, time_limit, S1_a[0], S1_a[1])
-print("b)")
-solve(P1_b, (100, 2), R1, time_limit, S1_b[0], S1_b[1])
-print("c)")
-solve(P1_c, (100, 2), R1, time_limit, S1_c[0], S1_c[1])
-print("P2")
-solve(P2, (100, 2), R2, time_limit, S2[0], S2[1], eval_method = N.Node.eval_env)
-#print("P3")
-#solve(P3, (100, 2), R3, variation_limit)
-
-
+#print("P1")
+#print("a)")
+#solve(P1_a, (100, 2), R1, time_limit, S1_a[0], S1_a[1])
+#print("b)")
+#solve(P1_b, (100, 2), R1, time_limit, S1_b[0], S1_b[1])
+#print("c)")
+#solve(P1_c, (100, 2), R1, time_limit, S1_c[0], S1_c[1])
+#print("P2")
+#solve(P2, (100, 2), R2, time_limit, S2[0], S2[1], eval_method = N.Node.eval_env)
+print("P3")
+for x in range(0,10):
+	print("x = {}".format(x))
+	P3.env = {'x': x}
+	solve(P3, (100, 2), R3, time_limit, S3[0], S3[1], eval_method = N.Node.eval_env)
 
