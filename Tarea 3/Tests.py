@@ -180,8 +180,10 @@ R3 = np.arange(50,300,50), np.arange(0,8)
 #S2 = ([N.AddNode, N.SubNode, N.MultNode], [25, 7, "x", 100, "y", "z"])
 
 temp = list(range(-10,11))
-temp.append("x")
+for _ in range(20):
+	temp.append("x")
 S3 = ([N.AddNode, N.SubNode, N.MultNode], temp)
+S4 = ([N.AddNode, N.SubNode, N.MultNode, N.DivNode], temp)
 #Run algorithms
 #print("P1")
 #print("a)")
@@ -192,9 +194,14 @@ S3 = ([N.AddNode, N.SubNode, N.MultNode], temp)
 #solve(P1_c, (100, 2), R1, time_limit, S1_c[0], S1_c[1])
 #print("P2")
 #solve(P2, (100, 2), R2, time_limit, S2[0], S2[1], eval_method = N.Node.eval_env)
-print("P3")
+#print("P3")
+#for x in range(0,10):
+#	print("x = {}".format(x))
+#	P3.env = {'x': x}
+#	solve(P3, (100, 2), R3, time_limit, S3[0], S3[1], eval_method = N.Node.eval_env)
+#	
+print("P4")
 for x in range(0,10):
 	print("x = {}".format(x))
 	P3.env = {'x': x}
-	solve(P3, (100, 2), R3, time_limit, S3[0], S3[1], eval_method = N.Node.eval_env)
-
+	solve(P3, (100, 2), R3, time_limit, S4[0], S4[1], eval_method = N.Node.eval_env)

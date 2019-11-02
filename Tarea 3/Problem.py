@@ -51,7 +51,7 @@ class Find_Number(Problem):
 		if self.specs.get("prune") == True:
 			growth = unit.dna.measure()
 		
-		vars = self.specs.get("env")
+		vars = self.envs
 		if vars != None:
 			unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval_env(self.specs.get("env")) - self.target))
 		else:
@@ -74,7 +74,10 @@ class Symbolic_Regression(Problem):
 		#pdb.set_trace()
 		growth = unit.dna.measure()
 		expected = self.target.eval_env(self.env)
-		unit.fitness = 1.0 / (growth + np.abs(unit.dna.eval_env(self.env)-expected))
+		try:
+			unit.fitness = 1.0 / (growth + np.abs(unit.dna.eval_env(self.env)-expected))
+		except ZeroDivisionError:
+			unit.fitness = 0.0
 		
 	def gene_generator(self, function_set, value_set):
 		"""
