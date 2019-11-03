@@ -23,20 +23,18 @@ class Problem(ABC):
 		"""
 		pass
 	
-	@abstractmethod
-	def gene_generator(self, f_set, var_set):
+	def gene_generator(self, function_set, value_set):
 		"""
-		Returns a tree based on the sets given
+		In this case the genes are replaced with a tree
 		"""
-		pass
-	
-	@abstractmethod
-	def individual_generator(self, f_set, var_set):
-		"""
-		Generates an individual
-		"""
-		pass
+		return T.AST(function_set, value_set)
 		
+	def individual_generator(self, func_set, val_set):
+		tree = self.gene_generator(func_set, val_set)
+		unit = Unit(tree())
+		self.fitness_function(unit)
+		return unit
+
 class Find_Number(Problem):
 	"""
 	Find a tree structure that when evaluated it will return a specific number
@@ -50,62 +48,22 @@ class Find_Number(Problem):
 			
 		if self.specs.get("prune") == True:
 			growth = unit.dna.measure()
+			
+		unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval() - self.target))
+
+class Variable_Terminals(Problem):
+	def fitness_function(self, unit):
+		counters = unit.dna.count({})
+		growth = unit.dna.measure()
 		
-		vars = self.envs
-		if vars != None:
-			unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval_env(self.specs.get("env")) - self.target))
-		else:
-			unit.fitness = 1.0 / (growth*repeats + np.abs(unit.dna.eval() - self.target))
-	
-	def gene_generator(self, function_set, value_set):
-		"""
-		In this case the genes are replaced with a tree
-		"""
-		return T.AST(function_set, value_set)
+		unit.fitness = 1.0 / (growth + np.abs(unit.dna.eval_env(self.env) - self.target))
 		
-	def individual_generator(self, func_set, val_set):
-		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree())
-		self.fitness_function(unit)
-		return unit
 		
 class Symbolic_Regression(Problem):
 	def fitness_function(self, unit):
-		#pdb.set_trace()
 		growth = unit.dna.measure()
 		expected = self.target.eval_env(self.env)
 		try:
 			unit.fitness = 1.0 / (growth + np.abs(unit.dna.eval_env(self.env)-expected))
 		except ZeroDivisionError:
 			unit.fitness = 0.0
-		
-	def gene_generator(self, function_set, value_set):
-		"""
-		In this case the genes are replaced with a tree
-		"""
-		return T.AST(function_set, value_set)
-		
-	def individual_generator(self, func_set, val_set):
-		#pdb.set_trace()
-		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree())
-		self.fitness_function(unit)
-		return unit
-
-class Division_Nodes(Problem):
-	def fitness_function(self, unit):
-		pass
-		
-	def gene_generator(self, function_set, value_set):
-		"""
-		In this case the genes are replaced with a tree
-		"""
-		return T.AST(function_set, value_set)
-		
-	def individual_generator(self, func_set, val_set):
-		tree = self.gene_generator(func_set, val_set)
-		unit = Unit(tree)
-		self.fitness_function(unit)
-		return unit
-	
-	
