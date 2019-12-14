@@ -17,7 +17,7 @@ def time_limit(board):
 	"""
 	Terminates process after a number of generations have passed
 	"""
-	if board.generation > 50:
+	if board.generation > 150:
 		return True
 	else:
 		return False
@@ -32,14 +32,14 @@ def fitness_limit(board):
 	if time_limit(board):
 		return True
 	
-	elif top.fitness == 1: # Normalized fitness
+	elif top.fitness == 1: # Normalized fitness maxmum
 		return True
 	else:
 		return False
 
 def variation_limit(board):
 	"""
-	Terminates the process if the best unit remain the same for a fixed number of generations
+	Terminates the process if the best unit fitness remain the same for a fixed number of generations
 	"""
 	if board.generation-board.best_time > 50:
 		return True
@@ -50,7 +50,7 @@ def variation_limit(board):
 Problem Analysis
 """
 
-def solve(Problem, fit_pair, range, term_func, func_set, val_set):
+def solve(Problem, fit_pair, range, term_func, func_set, val_set, heatmap=False):
 	"""
 	Solves a problem using a genetic algorithm, returns a fitness plot and a performance heatmap.
 
@@ -68,24 +68,25 @@ def solve(Problem, fit_pair, range, term_func, func_set, val_set):
 	plot_results(gen.fit_record)	
 
 	#Performance analysis
-	#gen.reset()
-	#print("Obtaining performance matrix...")
-	#configuration_test(gen, range[0], range[1])
+	if heatmap:
+		gen.reset()
+		print("Obtaining performance matrix...")
+		configuration_test(gen, range[0], range[1])
 
 def configuration_test(gen, x_range, y_range):
 	"""
 	Analyses the performance of the algorithm by generating a set of population/mutation_rate pairs and calculating the time of completion for each combination. Generates a heatmap with the results.
-	
+
 	@param gen: Genetic Algorithm to be evauated
 	@param x_range: List containing the population range used
 	@param y_range: List containing the mutation rate range used
 	"""
-	
+
 	populations = x_range
 	mutability = y_range
-	
+
 	matrix = np.zeros((len(mutability),len(populations)))
-	
+
 	i, j = 0, 0
 	for p in populations:
 		for m in mutability:
@@ -94,11 +95,11 @@ def configuration_test(gen, x_range, y_range):
 			gen.run()
 			matrix[j,i] = gen.best_time	#Moment the algorithm reaches the solution
 			gen.reset()
-			
+
 			j += 1
 		j = 0
 		i += 1
-					
+
 	plot_heatmap(matrix, populations, mutability)
 
 """
@@ -108,18 +109,17 @@ Plotting Methods
 def plot_results(fitness):
 	"""
 	Plots fitness graph for the best, average and worst solutions of each generation
-	
+
 	@param fitness: 3xn matrix containing the relevant data
 	"""
 	fit_reg = np.asarray(fitness)
 	best = fit_reg[:,0]
 	avg = fit_reg[:,1]
 	worst = fit_reg[:,2]
-	#pdb.set_trace()
 	plt.plot(best)
 	plt.plot(avg)
 	plt.plot(worst)
-	
+
 	plt.title("Population Fitness over time")
 	plt.xlabel("Generation")
 	plt.ylabel("Fitness")
@@ -128,7 +128,7 @@ def plot_results(fitness):
 def plot_heatmap(matrix, x_axis, y_axis):
 	"""
 	Plots performance matrix obtained from the "configuration_test" method
-	
+
 	@param matrix: Performance data
 	@param x_axis: Range used by the problem for the x axis
 	@param y_axis: Range used by the problem for the y axis
@@ -141,16 +141,16 @@ def plot_heatmap(matrix, x_axis, y_axis):
 			text = ax.text(k, l, int(matrix[l , k]), ha="center", va="center", color="w")
 
 	im = ax.imshow(matrix, cmap=cm.copper_r)
-	
+
 	ax.set_title("Performance Matrix  (Mutation Rate vs Population")
 	ax.set_yticks(np.arange(l_y))
 	ax.set_xticks(np.arange(l_x))
 	ax.set_yticklabels(y_axis)
 	ax.set_xticklabels(x_axis)
-	
+
 	fig.tight_layout()
 	plt.show()
-	
+
 """
 Main
 """
@@ -184,11 +184,10 @@ S3 = ([N.AddNode, N.SubNode, N.MultNode], temp)
 S4 = ([N.AddNode, N.SubNode, N.MultNode, N.DivNode], temp)
 
 #Run algorithms
-print("P1")
-print("a)")
-solve(P1_a, (100, 2), R, variation_limit, S1_ab[0], S1_ab[1])
+print("P1\na)")
+solve(P1_a, (100, 2), R, fitness_limit, S1_ab[0], S1_ab[1])
 print("b)")
-solve(P1_b, (100, 2), R, variation_limit, S1_ab[0], S1_ab[1])
+solve(P1_b, (100, 2), R, fitness_limit, S1_ab[0], S1_ab[1])
 print("c)")
 solve(P1_c, (100, 2), R, variation_limit, S1_c[0], S1_c[1])
 
@@ -199,10 +198,10 @@ print("P3")
 for x in range(0,10):
 	print("x = {}".format(x))
 	P3.env = {'x': x}
-	solve(P3, (100, 2), R, variation_limit, S3[0], S3[1])
+	solve(P3, (100, 2), R, fitness_limit, S3[0], S3[1])
 
 print("P4")
 for x in range(0,10):
 	print("x = {}".format(x))
 	P3.env = {'x': x}
-	solve(P3, (100, 2), R, variation_limit, S4[0], S4[1])
+	solve(P3, (100, 2), R, fitness_limit, S4[0], S4[1])
